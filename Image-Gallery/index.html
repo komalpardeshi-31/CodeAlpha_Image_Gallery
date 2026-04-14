@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Image Gallery</title>
+
+<style>
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #f5f5f5;
+}
+
+h1 {
+  margin: 20px;
+}
+
+.tabs {
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  margin: 5px;
+  border: 2px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.tab.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border: 3px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.image:hover {
+  transform: scale(1.05);
+  border-color: #007bff;
+}
+
+/* Lightbox */
+#lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+#lightbox img {
+  max-width: 80%;
+  max-height: 80%;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Buttons */
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40px;
+  background: rgba(255,255,255,0.3);
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  color: white;
+}
+
+.prev { left: 20px; }
+.next { right: 20px; }
+
+.prev:hover, .next:hover {
+  background: rgba(255,255,255,0.6);
+  color: black;
+}
+</style>
+
+</head>
+<body>
+
+<h1>🌟 Image Gallery</h1>
+
+<div class="tabs">
+  <button class="tab active" onclick="filterImages('all', this)">All</button>
+  <button class="tab" onclick="filterImages('nature', this)">Nature</button>
+  <button class="tab" onclick="filterImages('travel', this)">Travel</button>
+  <button class="tab" onclick="filterImages('animals', this)">Animals</button>
+  <button class="tab" onclick="filterImages('cities', this)">Cities</button>
+</div>
+
+<div class="gallery">
+  <!-- Nature -->
+  <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" class="image nature" onclick="openLightbox(this)">
+  
+  <!-- Travel -->
+ <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470" class="image travel" onclick="openLightbox(this)">
+  
+  <!-- Animals -->
+<img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?auto=format&fit=crop&w=800&q=80" class="image animals" onclick="openLightbox(this)">
+  
+  <!-- Cities -->
+  <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b" class="image cities" onclick="openLightbox(this)">
+  
+  <!-- Nature -->
+  <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e" class="image nature" onclick="openLightbox(this)">
+  
+  <!-- Travel -->
+  <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" class="image travel" onclick="openLightbox(this)">
+  
+  <!-- Animals -->
+  <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d" class="image animals" onclick="openLightbox(this)">
+  
+  <!-- Cities -->
+  <img src="https://images.unsplash.com/photo-1494526585095-c41746248156" class="image cities" onclick="openLightbox(this)">
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" onclick="closeLightbox()">
+  <span class="close">&times;</span>
+
+  <button class="prev" onclick="prevImage(event)">❮</button>
+
+  <img id="lightbox-img">
+
+  <button class="next" onclick="nextImage(event)">❯</button>
+</div>
+
+<script>
+let currentIndex = 0;
+let images = [];
+
+function filterImages(category, btn) {
+  let allImages = document.querySelectorAll(".image");
+  let tabs = document.querySelectorAll(".tab");
+
+  tabs.forEach(tab => tab.classList.remove("active"));
+  btn.classList.add("active");
+
+  images = [];
+
+  allImages.forEach((img) => {
+    if (category === "all" || img.classList.contains(category)) {
+      img.style.display = "block";
+      images.push(img);
+    } else {
+      img.style.display = "none";
+    }
+  });
+}
+
+function openLightbox(img) {
+  let visibleImages = document.querySelectorAll(".image:not([style*='display: none'])");
+  images = Array.from(visibleImages);
+
+  currentIndex = images.indexOf(img);
+
+  document.getElementById("lightbox").style.display = "flex";
+  document.getElementById("lightbox-img").src = img.src;
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").style.display = "none";
+}
+
+function nextImage(event) {
+  event.stopPropagation();
+  currentIndex = (currentIndex + 1) % images.length;
+  document.getElementById("lightbox-img").src = images[currentIndex].src;
+}
+
+function prevImage(event) {
+  event.stopPropagation();
+  currentIndex = (currentIndex - 1 + images.length) % images.length;
+  document.getElementById("lightbox-img").src = images[currentIndex].src;
+}
+</script>
+
+</body>
+</html>
